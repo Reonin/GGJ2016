@@ -339,6 +339,9 @@ function startTimer(duration, display) {
 
 randommizeMinigame();
 function controller(){
+
+	player.totalPoints = player.SteppingonCrackPoint + player.OpeningUmbrellaPoint + player.KnockingWoodPoint;
+	player2.totalPoints = player2.SteppingonCrackPoint + player2.OpeningUmbrellaPoint + player2.KnockingWoodPoint;
      //Pause the game
     if (keydown.p) {
 
@@ -514,13 +517,62 @@ function draw() { //Draws objects to the canvas
 
 
 
+		canvas.fillStyle = "#000"; // Set color to black
+		canvas.font = 'bold 80pt Calibri';
+		var PLAYER1_TEXT = player.totalPoints;
+		gameTextx = canvas.measureText(PLAYER1_TEXT).width; //Centers the text based on length
+		canvas.fillText(PLAYER1_TEXT, (CANVAS_WIDTH / 3) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 4.5);
+		//The next two create a special text effect
+		canvas.fillStyle = "#FF0";
+		canvas.fillText(PLAYER1_TEXT, (CANVAS_WIDTH / 3) - (gameTextx / 2), CANVAS_HEIGHT / 4.5);
+
+		canvas.fillStyle = "00F";
+		canvas.fillText(PLAYER1_TEXT, (CANVAS_WIDTH / 3) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 4.5);
+
+		var PLAYER1_HEADER = "Player 1";
+		gameTextx = canvas.measureText(PLAYER1_HEADER).width; //Centers the text based on length
+		canvas.fillText(PLAYER1_HEADER, (CANVAS_WIDTH / 3) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 8);
+		//The next two create a special text effect
+		canvas.fillStyle = "#FF0";
+		canvas.fillText(PLAYER1_HEADER, (CANVAS_WIDTH / 3) - (gameTextx / 2), CANVAS_HEIGHT / 8);
+
+		canvas.fillStyle = "00F";
+		canvas.fillText(PLAYER1_HEADER, (CANVAS_WIDTH / 3) - (gameTextx / 2) + 3, CANVAS_HEIGHT /8);
+
+
+
+		canvas.fillStyle = "#000"; // Set color to black
+		canvas.font = 'bold 80pt Calibri';
+		var PLAYER2_TEXT = player2.totalPoints;
+		gameTextx = canvas.measureText(PLAYER2_TEXT).width; //Centers the text based on length
+		canvas.fillText(PLAYER2_TEXT, (CANVAS_WIDTH/1.5 ) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 4.5);
+		//The next two create a special text effect
+		canvas.fillStyle = "#FF0";
+		canvas.fillText(PLAYER2_TEXT, (CANVAS_WIDTH/1.5 ) - (gameTextx / 2), CANVAS_HEIGHT / 4.5);
+
+		canvas.fillStyle = "00F";
+		canvas.fillText(PLAYER2_TEXT, (CANVAS_WIDTH/1.5 ) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 4.5);
+
+
+		var PLAYER2_HEADER = "Player 2";
+		gameTextx = canvas.measureText(PLAYER2_HEADER).width; //Centers the text based on length
+		canvas.fillText(PLAYER2_HEADER, (CANVAS_WIDTH / 1.5) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 8);
+		//The next two create a special text effect
+		canvas.fillStyle = "#FF0";
+		canvas.fillText(PLAYER2_HEADER, (CANVAS_WIDTH / 1.5) - (gameTextx / 2), CANVAS_HEIGHT / 8);
+
+		canvas.fillStyle = "00F";
+		canvas.fillText(PLAYER2_HEADER, (CANVAS_WIDTH / 1.5) - (gameTextx / 2) + 3, CANVAS_HEIGHT /8);
+
+
+
 
 
 		if(randomMinigame == "wood"){
 
 			canvas.fillStyle = "#000"; // Set color to black
 			canvas.font = 'bold 80pt Calibri';
-			var MINIGAME_TEXT = "KNOCK ON WOOD";
+			var MINIGAME_TEXT = "KNOCK ON WOOD!";
 			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
 			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 3);
 			//The next two create a special text effect
@@ -535,7 +587,7 @@ function draw() { //Draws objects to the canvas
 
 			canvas.fillStyle = "#000"; // Set color to black
 			canvas.font = 'bold 80pt Calibri';
-			var MINIGAME_TEXT = "STEP ON THE CRACK";
+			var MINIGAME_TEXT = "STEP ON THE CRACK!";
 			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
 			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 3);
 			//The next two create a special text effect
@@ -550,7 +602,7 @@ function draw() { //Draws objects to the canvas
 
 			canvas.fillStyle = "#000"; // Set color to black
 			canvas.font = 'bold 80pt Calibri';
-			var MINIGAME_TEXT = "Don't open that umbrella";
+			var MINIGAME_TEXT = "Don't open that umbrella!";
 			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
 			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 3);
 			//The next two create a special text effect
