@@ -169,6 +169,8 @@ function waitForInput(whichPlayer,gameType) {
 			 		 whichPlayer.SteppingonCrackPoint += 1;
 		 }else if(gameType == "umbrella"){
 			 		whichPlayer.OpeningUmbrellaPoint += 1;
+		 }else if(gameType = "fandeath"){
+					whichPlayer.FanDeathPoint += 1;
 		 }
 
      setTimeout('clearTimer()', 500);
@@ -206,41 +208,8 @@ var shoot_sound = new Howl({
 //Create The player
 var player = new PlayerCreator("Player 1","#D3D3D3");
 var player2 = new PlayerCreator("Player 2","#0000FF");
+var winningPlayer;
 
-
-var playerBullets = [];
-
-function Bullet(I) {
-    I.active = true;
-
-    I.xVelocity = 0;
-    I.yVelocity = -I.speed;
-    I.width = 3;
-    I.height = 3;
-    I.color = "#000";
-
-    I.inBounds = function() {
-        return I.x >= 0 && I.x <= CANVAS_WIDTH &&
-            I.y >= 0 && I.y <= CANVAS_HEIGHT;
-    };
-
-    I.draw = function() {
-        canvas.fillStyle = this.color;
-        canvas.fillRect(this.x, this.y, this.width, this.height);
-    };
-
-    I.update = function() {
-        I.x += I.xVelocity;
-        I.y += I.yVelocity;
-
-        I.active = I.active && I.inBounds();
-    };
-
-    return I;
-}
-
-
-/*** Parrallax background tutorial http://javacoffee.de/?p=866 **/
 //Parallax background
 
 /**
@@ -298,7 +267,7 @@ function ParallaxScrolling(canvas, imgdata) {
 
 var layer = new Array('images/redbrick.jpg');
 var parallax = new ParallaxScrolling(canvas, layer);
-var miniGameArray = ['wood', 'crack', 'umbrella'];
+var miniGameArray = ['wood', 'crack', 'umbrella','fandeath'];
 var randomMinigame;
 var miniGameTimer = 10;
 
@@ -349,8 +318,16 @@ function startTimer(duration, display) {
 randommizeMinigame();
 function controller(){
 
-	player.totalPoints = player.SteppingonCrackPoint + player.OpeningUmbrellaPoint + player.KnockingWoodPoint;
-	player2.totalPoints = player2.SteppingonCrackPoint + player2.OpeningUmbrellaPoint + player2.KnockingWoodPoint;
+	player.totalPoints = player.SteppingonCrackPoint + player.OpeningUmbrellaPoint + player.KnockingWoodPoint + player.FanDeathPoint;
+	player2.totalPoints = player2.SteppingonCrackPoint + player2.OpeningUmbrellaPoint + player2.KnockingWoodPoint+ player2.FanDeathPoint;
+
+	if(player.totalPoints >= 10){
+			currentState = states.End;
+			winningPlayer = player.name;
+	}else if(player2.totalPoints >= 10){
+			currentState = states.End;
+			winningPlayer = player2.name;
+	}
      //Pause the game
     if (keydown.p) {
 
@@ -439,7 +416,16 @@ function update() { //Updates location and reaction of objects to the canvas
 				}
 
 
+				if (keydown.r && randomMinigame == "fandeath") {
+					waitForInput(player, "fandeath");
+					console.log("good job you knocked on fandeath player 1");
+				}
 
+				if (keydown.f && randomMinigame == "fandeath") {
+						waitForInput(player2, "fandeath");
+					console.log("good job you knocked on fandeath player 2");
+
+				}
 
 
 
@@ -624,6 +610,22 @@ function draw() { //Draws objects to the canvas
 
 
 		}
+		else if(randomMinigame == "fandeath"){
+
+			canvas.fillStyle = "#000"; // Set color to black
+			canvas.font = 'bold 80pt Calibri';
+			var MINIGAME_TEXT = "선풍기 괴담";
+			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
+			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 2);
+			//The next two create a special text effect
+			canvas.fillStyle = "#0F0";
+			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 2);
+
+			canvas.fillStyle = "10F";
+			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 2);
+
+
+		}
 
 
 
@@ -650,7 +652,7 @@ function draw() { //Draws objects to the canvas
         canvas.fillStyle = "#F00"; // Set color to red
         canvas.font = '25pt Calibri';
 
-        var GameOVER_TEXT = "Game Over";
+        var GameOVER_TEXT = "You've succesfully Cursed the World " + winningPlayer + "!";
         endTextX = canvas.measureText(GameOVER_TEXT).width; //Centers the text based on length
         //canvas.fillText(GameOVER_TEXT, (CANVAS_WIDTH/2) - (GameOVER_TEXTx/2) , CANVAS_HEIGHT-CANVAS_HEIGHT/4);
 
