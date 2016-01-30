@@ -156,7 +156,14 @@ function pauseGame() {
      paused = !paused;
      setTimeout('clearTimer()', 500);
 }
-
+function waitForInput() {
+    if (notyet == 1) {
+        console.log("waiting")
+        return;
+    }
+     notyet = 1;
+     setTimeout('clearTimer()', 500);
+}
 //console.log(keydown.esc);
 
 
@@ -283,7 +290,54 @@ function ParallaxScrolling(canvas, imgdata) {
 var layer = new Array('images/redbrick.jpg');
 var parallax = new ParallaxScrolling(canvas, layer);
 var miniGameArray = ['wood', 'crack', 'umbrella'];
-var randomMinigame = miniGameArray[Math.floor(Math.random() * miniGameArray.length)];
+var randomMinigame;
+var miniGameTimer = 10;
+
+function randommizeMinigame(){
+	//cHOOSE THE Game
+	//Reset a Timer
+  miniGameTimer = 10;
+  randomMinigame = miniGameArray[Math.floor(Math.random() * miniGameArray.length)];
+	return randomMinigame;
+
+}
+
+function startTimer(duration, display) {
+    var start = Date.now(),
+        diff,
+        minutes,
+        seconds;
+    function timer() {
+        // get the number of seconds that have elapsed since
+        // startTimer() was called
+        diff = duration - (((Date.now() - start) / 1000) | 0);
+
+        // does the same job as parseInt truncates the float
+        seconds = (diff % 60) | 0;
+
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        miniGameTimer = seconds;
+				if(miniGameTimer < 1){
+					randommizeMinigame();
+
+				}
+        if (diff <= 0) {
+            // add one second so that the count down starts at the full duration
+            // example 05:00 not 04:59
+            start = Date.now() + 1000;
+        }
+    };
+    // we don't want to wait a full second before the timer starts
+    timer();
+    setInterval(timer, 1000);
+
+
+}
+
+
+
+randommizeMinigame();
 function controller(){
      //Pause the game
     if (keydown.p) {
@@ -325,6 +379,7 @@ function update() { //Updates location and reaction of objects to the canvas
         if (keydown.space) {
 
             currentState = states.Game;
+						startTimer(10,miniGameTimer);
         }
 
 
@@ -337,8 +392,10 @@ function update() { //Updates location and reaction of objects to the canvas
         //Player Movement Controls
 				//firstMiniGame
         if (keydown.q && randomMinigame == "wood") {
+					//waitForInput();
           player.SteppingonCrackPoint = player.SteppingonCrackPoint + 1;
 					console.log("good job you knocked on wood player 1");
+
         }
 
         if (keydown.a && randomMinigame == "wood") {
@@ -443,6 +500,21 @@ function draw() { //Draws objects to the canvas
             tile.draw();
         });
 		*/
+		canvas.fillStyle = "#000"; // Set color to black
+		canvas.font = 'bold 80pt Calibri';
+		var TIMER_TEXT = miniGameTimer;
+		gameTextx = canvas.measureText(TIMER_TEXT).width; //Centers the text based on length
+		canvas.fillText(TIMER_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 4.5);
+		//The next two create a special text effect
+		canvas.fillStyle = "#FF0";
+		canvas.fillText(TIMER_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 4.5);
+
+		canvas.fillStyle = "00F";
+		canvas.fillText(TIMER_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 4.5);
+
+
+
+
 
 		if(randomMinigame == "wood"){
 
@@ -452,7 +524,7 @@ function draw() { //Draws objects to the canvas
 			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
 			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 3);
 			//The next two create a special text effect
-			canvas.fillStyle = "#F00";
+			canvas.fillStyle = "#00F";
 			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 3);
 
 			canvas.fillStyle = "00F";
@@ -482,7 +554,7 @@ function draw() { //Draws objects to the canvas
 			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
 			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 3);
 			//The next two create a special text effect
-			canvas.fillStyle = "#F00";
+			canvas.fillStyle = "#0F0";
 			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 3);
 
 			canvas.fillStyle = "00F";
