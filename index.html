@@ -16,7 +16,11 @@
 	<script src="libraries/player.js" type="text/javascript"></script>
   <script src="libraries/map.js" type="text/javascript"></script> <!-- Object and Level Mapping,  -->
   <script src="libraries/tile.js" type="text/javascript"></script> <!-- Tile Mapping,  -->
-
+	<script src="libraries/konami.js" type="text/javascript"></script>
+	<script type="text/javascript">
+	        konami = new Konami()
+	         konami.load("https://www.youtube.com/watch?v=Gj4-E5Hs3Kc");
+	</script>
 
 </head>
 
@@ -192,7 +196,8 @@ function waitForInput(whichPlayer,gameType) {
 		 }else if(gameType == "umbrella"){
 			 		whichPlayer.OpeningUmbrellaPoint += 1;
 		 }else if(gameType = "fandeath"){
-					whichPlayer.FanDeathPoint += 1;
+					player.FanDeathPoint += 1;
+					player2.FanDeathPoint += 1;
 		 }else if(gameType = "catcross"){
 					whichPlayer.CatCrossPoint += 1;
 		 }
@@ -313,9 +318,14 @@ var witchBg = { sprite:{
 
 };
 
-var layer = new Array('images/redbrick.jpg');
+var layer = new Array('images/TheStarfield.png');
 var parallax = new ParallaxScrolling(canvas, layer);
 var miniGameArray = ['wood', 'crack', 'umbrella','fandeath','catcross'];
+//miniGameArray = ['notwood', 'notcrack', 'notumbrella', 'notcatcross'];
+if(player.totalPoints >= 5 || player2.totalPoints >= 5){
+	miniGameArray = ['wood', 'crack', 'umbrella','fandeath','catcross','notwood', 'notcrack', 'notumbrella', 'notcatcross'];
+}
+
 var randomMinigame;
 var miniGameTimer = 10;
 var WINCONDITION = 11;
@@ -436,7 +446,7 @@ function update() { //Updates location and reaction of objects to the canvas
 
         //Player Movement Controls
 				//firstMiniGame
-        if (keydown.q && randomMinigame == "wood") {
+        if (keydown.up && randomMinigame == "wood") {
 
 					waitForInput(player, "wood");
           //player.SteppingonCrackPoint = player.SteppingonCrackPoint + 1;
@@ -444,7 +454,7 @@ function update() { //Updates location and reaction of objects to the canvas
 
         }
 
-        if (keydown.a && randomMinigame == "wood") {
+        if (keydown.down && randomMinigame == "wood") {
              waitForInput(player2, "wood");
 						 console.log("good job you knocked on wood player 2");
         }
@@ -472,12 +482,12 @@ function update() { //Updates location and reaction of objects to the canvas
 				}
 
 				//press button
-				if (keydown.r && randomMinigame == "fandeath") {
+				if (keydown.space && randomMinigame == "fandeath") {
 					waitForInput(player, "fandeath");
 					console.log("good job you knocked on fandeath player 1");
 				}
 
-				if (keydown.f && randomMinigame == "fandeath") {
+				if (keydown.space && randomMinigame == "fandeath") {
 						waitForInput(player2, "fandeath");
 					console.log("good job you knocked on fandeath player 2");
 
@@ -494,6 +504,54 @@ function update() { //Updates location and reaction of objects to the canvas
 
 				}
 
+/*******NOt **/
+if ((keydown.w || keydown.e || keydown.space || (keydown.t && keydown.y) )  && randomMinigame == "notwood") {
+
+	waitForInput(player, "wood");
+	//player.SteppingonCrackPoint = player.SteppingonCrackPoint + 1;
+	console.log("good job you knocked on wood player 1");
+
+}
+
+if ((keydown.s || keydown.d || keydown.space || (keydown.g && keydown.h)) && randomMinigame == "notwood") {
+		 waitForInput(player2, "wood");
+		 console.log("good job you knocked on wood player 2");
+}
+
+if ((keydown.down || keydown.e || keydown.space || (keydown.t && keydown.y))  && randomMinigame == "notcrack") {
+	waitForInput(player, "crack");
+	console.log("good job you knocked on crack player 1");
+}
+
+if ((keydown.down || keydown.d || keydown.space || (keydown.g && keydown.h)) && randomMinigame == "notcrack") {
+waitForInput(player2, "crack");
+	console.log("good job you knocked on crack player 2");
+
+}
+//open and close umbrella
+if ((keydown.q || keydown.w || keydown.space || (keydown.t && keydown.y)) && randomMinigame == "notumbrella") {
+	waitForInput(player, "umbrella");
+	console.log("good job you knocked on umbrella player 1");
+}
+
+if ((keydown.down || keydown.s || keydown.space || (keydown.g && keydown.h)) && randomMinigame == "notumbrella") {
+		waitForInput(player2, "umbrella");
+	console.log("good job you knocked on umbrella player 2");
+
+}
+//press button
+
+//step on both
+if ((keydown.q || keydown.w || keydown.space || keydown.e) && randomMinigame == "notcatcross") {
+	waitForInput(player, "catcross");
+	console.log("good job you knocked on catcross player 1");
+}
+
+if ((keydown.down || keydown.s || keydown.space || keydown.d) && randomMinigame == "notcatcross") {
+		waitForInput(player2, "catcross");
+	console.log("good job you knocked on catcross player 2");
+
+}
 
 
     }
@@ -609,6 +667,17 @@ function draw() { //Draws objects to the canvas
 		canvas.fillStyle = "00F";
 		canvas.fillText(TIMER_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 4.5);
 
+		canvas.fillStyle = "#000"; // Set color to black
+		canvas.font = 'bold 60pt Calibri';
+		gameTextx = canvas.measureText("Time").width; //Centers the text based on length
+		canvas.fillText("Time", (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 7);
+		//The next two create a special text effect
+		canvas.fillStyle = "#FF0";
+		canvas.fillText("Time", (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 7);
+
+		canvas.fillStyle = "00F";
+		canvas.fillText("Time", (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 7);
+
 
 
 		canvas.fillStyle = "#000"; // Set color to black
@@ -627,7 +696,7 @@ function draw() { //Draws objects to the canvas
 		gameTextx = canvas.measureText(PLAYER1_HEADER).width; //Centers the text based on length
 		canvas.fillText(PLAYER1_HEADER, (CANVAS_WIDTH / 3) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 8);
 		//The next two create a special text effect
-		canvas.fillStyle = "#F0F";
+		canvas.fillStyle = "#F00";
 		canvas.fillText(PLAYER1_HEADER, (CANVAS_WIDTH / 3) - (gameTextx / 2), CANVAS_HEIGHT / 8);
 
 		canvas.fillStyle = "00F";
@@ -669,7 +738,7 @@ function draw() { //Draws objects to the canvas
 			printGameText("STEP ON THE CRACK!", "#F00");
 
 		}else if(randomMinigame == "umbrella"){
-			printGameText("Don't open that umbrella!", "#0F0");
+			printGameText("Open the umbrella!", "#0F0");
 
 		}
 		else if(randomMinigame == "fandeath"){
@@ -679,6 +748,21 @@ function draw() { //Draws objects to the canvas
 					printGameText("Cross the Black Cat", "#000");
 
 			}
+
+			else if(randomMinigame == "notwood"){
+					printGameText("DON'T KNOCK ON WOOD!", "#00F");
+
+			}else if(randomMinigame == "notcrack"){
+				printGameText("DON'T STEP ON THE CRACK!", "#F00");
+
+			}else if(randomMinigame == "notumbrella"){
+				printGameText("Don't open that umbrella!", "#0F0");
+
+			}
+			else if(randomMinigame == "notcatcross"){
+						printGameText("Don't Cross the Black Cat", "#000");
+
+				}
 
 
 
@@ -730,16 +814,20 @@ function draw() { //Draws objects to the canvas
 
 				canvas.fillStyle = "#FF"; // Set color to black
 				canvas.font = '20pt Calibri';
-				canvas.fillText("Wayne ", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 45);
+				canvas.fillText("Wayne James", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 45);
 
 				canvas.fillStyle = "#FF"; // Set color to black
 				canvas.font = '20pt Calibri';
-				canvas.fillText("Jordan ", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 90);
+				canvas.fillText("Jordan Riley ", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 90);
 
 				canvas.fillStyle = "#FF"; // Set color to black
 				canvas.font = '20pt Calibri';
 				canvas.fillText("Okwudili Udeh ", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 135);
 
+
+				canvas.fillStyle = "#FF"; // Set color to black
+				canvas.font = '20pt Calibri';
+				canvas.fillText("Special Thanks to Jasmine Francois ", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 180);
     }
 
 
