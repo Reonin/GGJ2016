@@ -280,7 +280,7 @@ var parallax = new ParallaxScrolling(canvas, layer);
 var miniGameArray = ['wood', 'crack', 'umbrella','fandeath','catcross'];
 var randomMinigame;
 var miniGameTimer = 10;
-var WINCONDITION = 10;
+var WINCONDITION = 11;
 var WINCONDITION_MULTIPLYER = 30;
 function randommizeMinigame(){
 	//cHOOSE THE Game
@@ -650,15 +650,12 @@ function draw() { //Draws objects to the canvas
         canvas.fillRect(CANVAS_WIDTH/2 - 150, 20,  WINCONDITION * WINCONDITION_MULTIPLYER, 40);
 
         //Second bar is red dynamic one
-        canvas.strokeRect(CANVAS_WIDTH/2 - 150, 20, 300 , 40);
+        canvas.strokeRect(CANVAS_WIDTH/2 - 150, 20, WINCONDITION * WINCONDITION_MULTIPLYER , 40);
         canvas.fillStyle = "#cb21e6";
         canvas.fillRect(CANVAS_WIDTH/2 - 150, 20, (player.totalPoints + player2.totalPoints) * WINCONDITION_MULTIPLYER, 40);
 
 
 				//Third bar is font between bars
-        canvas.strokeRect(CANVAS_WIDTH/2 - 150, 20, 300 , 40);
-        canvas.fillStyle = "#F00";
-        canvas.fillRect(CANVAS_WIDTH/2 - 150, 20, (player.totalPoints + player2.totalPoints) * WINCONDITION_MULTIPLYER, 40);
 
 				canvas.fillStyle = "#000"; // Set color to black
 				canvas.font = 'bold 20pt WITCHESMAGIC';
