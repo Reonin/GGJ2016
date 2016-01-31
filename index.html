@@ -446,7 +446,7 @@ function update() { //Updates location and reaction of objects to the canvas
 
         //Player Movement Controls
 				//firstMiniGame
-        if (keydown.q && randomMinigame == "wood") {
+        if (keydown.up && randomMinigame == "wood") {
 
 					waitForInput(player, "wood");
           //player.SteppingonCrackPoint = player.SteppingonCrackPoint + 1;
@@ -454,17 +454,17 @@ function update() { //Updates location and reaction of objects to the canvas
 
         }
 
-        if (keydown.z && randomMinigame == "wood") {
+        if (keydown.down && randomMinigame == "wood") {
              waitForInput(player2, "wood");
 						 console.log("good job you knocked on wood player 2");
         }
 
-        if (keydown.left && randomMinigame == "crack") {
+        if (keydown.w && randomMinigame == "crack") {
 					waitForInput(player, "crack");
 					console.log("good job you knocked on crack player 1");
         }
 
-        if (keydown.right && randomMinigame == "crack") {
+        if (keydown.s && randomMinigame == "crack") {
 				waitForInput(player2, "crack");
 					console.log("good job you knocked on crack player 2");
 
@@ -505,7 +505,7 @@ function update() { //Updates location and reaction of objects to the canvas
 				}
 
 /*******NOt **/
-if ((keydown.left || keydown.e || keydown.r || (keydown.t && keydown.y) )  && randomMinigame == "notwood") {
+if ((keydown.w || keydown.e || keydown.r || (keydown.t && keydown.y) )  && randomMinigame == "notwood") {
 
 	waitForInput(player, "wood");
 	//player.SteppingonCrackPoint = player.SteppingonCrackPoint + 1;
@@ -513,28 +513,28 @@ if ((keydown.left || keydown.e || keydown.r || (keydown.t && keydown.y) )  && ra
 
 }
 
-if ((keydown.right || keydown.d || keydown.f || (keydown.g && keydown.h)) && randomMinigame == "notwood") {
+if ((keydown.s || keydown.d || keydown.f || (keydown.g && keydown.h)) && randomMinigame == "notwood") {
 		 waitForInput(player2, "wood");
 		 console.log("good job you knocked on wood player 2");
 }
 
-if ((keydown.q || keydown.e || keydown.r || (keydown.t && keydown.y))  && randomMinigame == "notcrack") {
+if ((keydown.down || keydown.e || keydown.r || (keydown.t && keydown.y))  && randomMinigame == "notcrack") {
 	waitForInput(player, "crack");
 	console.log("good job you knocked on crack player 1");
 }
 
-if ((keydown.z || keydown.d || keydown.f || (keydown.g && keydown.h)) && randomMinigame == "notcrack") {
+if ((keydown.down || keydown.d || keydown.f || (keydown.g && keydown.h)) && randomMinigame == "notcrack") {
 waitForInput(player2, "crack");
 	console.log("good job you knocked on crack player 2");
 
 }
 //open and close umbrella
-if ((keydown.q || keydown.left || keydown.r || (keydown.t && keydown.y)) && randomMinigame == "notumbrella") {
+if ((keydown.q || keydown.w || keydown.r || (keydown.t && keydown.y)) && randomMinigame == "notumbrella") {
 	waitForInput(player, "umbrella");
 	console.log("good job you knocked on umbrella player 1");
 }
 
-if ((keydown.z || keydown.right || keydown.f || (keydown.g && keydown.h)) && randomMinigame == "notumbrella") {
+if ((keydown.down || keydown.s || keydown.f || (keydown.g && keydown.h)) && randomMinigame == "notumbrella") {
 		waitForInput(player2, "umbrella");
 	console.log("good job you knocked on umbrella player 2");
 
@@ -542,12 +542,12 @@ if ((keydown.z || keydown.right || keydown.f || (keydown.g && keydown.h)) && ran
 //press button
 
 //step on both
-if ((keydown.q || keydown.left || keydown.r || keydown.e) && randomMinigame == "notcatcross") {
+if ((keydown.q || keydown.w || keydown.r || keydown.e) && randomMinigame == "notcatcross") {
 	waitForInput(player, "catcross");
 	console.log("good job you knocked on catcross player 1");
 }
 
-if ((keydown.z || keydown.right || keydown.f || keydown.d) && randomMinigame == "notcatcross") {
+if ((keydown.down || keydown.s || keydown.f || keydown.d) && randomMinigame == "notcatcross") {
 		waitForInput(player2, "catcross");
 	console.log("good job you knocked on catcross player 2");
 
