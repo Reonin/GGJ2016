@@ -101,6 +101,21 @@ window.requestAnimFrame = (function() {
             window.setTimeout(callback, 1000 / 60);
         };
 })();
+
+function animateSprite(object) {
+    // Sprite walk cycle
+    var frames = 3;
+    var newDateObj = new Date();
+    if ((newDateObj.getTime() - object.spriteLastTickTime) >= object.spriteCooldown) {
+        if (object.spriteIndex < frames) {
+            object.spriteIndex++;
+        } else {
+            object.spriteIndex = 0;
+        }
+        object.spriteLastTickTime = newDateObj.getTime();
+    }
+}
+
 //Mouse Coordinate Positioning
  function writeMessage(canvas, message) {
         var context = canvasid.getContext('2d');
@@ -275,6 +290,29 @@ function ParallaxScrolling(canvas, imgdata) {
     }
 }
 
+var witchBg = { sprite:{
+        witchAnimation:
+                [Sprite("witchanim1.jpg"),
+                Sprite("witchanim2.jpg"),
+                Sprite("witchanim3.jpg"),
+                Sprite("witchanim4.jpg")]
+        },
+        spriteIndex: 0,
+        spriteCooldown: 200,
+        spriteLastTickTime: 0,
+        x: 0,
+        y: 0,
+        width: 40,
+        height: 40,
+
+        draw: function() {
+        //canvas.fillStyle = this.color;
+        // canvas.fillRect(this.x, this.y, this.width, this.height);
+        this.sprite["witchAnimation"][this.spriteIndex].draw(canvas, this.x, this.y);
+        }
+
+};
+
 var layer = new Array('images/redbrick.jpg');
 var parallax = new ParallaxScrolling(canvas, layer);
 var miniGameArray = ['wood', 'crack', 'umbrella','fandeath','catcross'];
@@ -394,7 +432,7 @@ function update() { //Updates location and reaction of objects to the canvas
 
 
     if (currentState === states.Game) {
-
+	animateSprite(witchBg);
 
         //Player Movement Controls
 				//firstMiniGame
@@ -553,7 +591,7 @@ function draw() { //Draws objects to the canvas
 
     if (currentState === states.Game) {
       parallax.Draw(); //draw background
-
+	witchBg.draw();
 /*
         tileArray.forEach(function(tile) {
             tile.draw();
