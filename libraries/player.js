@@ -9,7 +9,8 @@ function PlayerCreator(name,color){
       this.SteppingonCrackPoint = 0;
       this.OpeningUmbrellaPoint = 0;
       this.KnockingWoodPoint = 0;
-	  this.FanDeathPoint = 0;
+	    this.FanDeathPoint = 0;
+      this.CatCrossPoint = 0;
       this.totalPoints = 0;
       this.name = name;
       this.color = color;

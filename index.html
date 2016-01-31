@@ -22,6 +22,13 @@
 
 <body>
 	<style>
+
+	@font-face {
+    font-family: 'WITCHESMAGIC';
+    src: url('libraries/WITCHESMAGIC.ttf');
+}
+
+
      html {
         width: 100%;
         height: 100%;
@@ -157,7 +164,7 @@ function pauseGame() {
      setTimeout('clearTimer()', 500);
 }
 function waitForInput(whichPlayer,gameType) {
-	debugger;
+	//debugger;
     if (notyet == 1) {
         console.log("waiting")
         return;
@@ -171,8 +178,14 @@ function waitForInput(whichPlayer,gameType) {
 			 		whichPlayer.OpeningUmbrellaPoint += 1;
 		 }else if(gameType = "fandeath"){
 					whichPlayer.FanDeathPoint += 1;
+		 }else if(gameType = "catcross"){
+					whichPlayer.CatCrossPoint += 1;
 		 }
-
+		 witchLaugh_sound.play();
+		 randommizeMinigame();
+		 clearInterval(currentTimer);
+	//	 destroyTime = true;
+		 startTimer(10, miniGameTimer);
      setTimeout('clearTimer()', 500);
 }
 //console.log(keydown.esc);
@@ -195,13 +208,10 @@ var GameLoopMusic_sound = new Howl({
     autoplay: true,
     loop: true,
 });
-var explosion_sound = new Howl({
-    urls: ['sounds/explosion.mp3', 'sounds/explosion.wav']
+var witchLaugh_sound = new Howl({
+    urls: ['sounds/witchlaugh.mp3']
 });
-var shoot_sound = new Howl({
-    urls: ['sounds/shoot.mp3', 'sounds/shoot.wav'],
-    volume: 0.2
-});
+
 
 //explosion_sound.play();
 
@@ -267,10 +277,11 @@ function ParallaxScrolling(canvas, imgdata) {
 
 var layer = new Array('images/redbrick.jpg');
 var parallax = new ParallaxScrolling(canvas, layer);
-var miniGameArray = ['wood', 'crack', 'umbrella','fandeath'];
+var miniGameArray = ['wood', 'crack', 'umbrella','fandeath','catcross'];
 var randomMinigame;
 var miniGameTimer = 10;
-
+var WINCONDITION = 10;
+var WINCONDITION_MULTIPLYER = 30;
 function randommizeMinigame(){
 	//cHOOSE THE Game
 	//Reset a Timer
@@ -308,26 +319,33 @@ function startTimer(duration, display) {
     };
     // we don't want to wait a full second before the timer starts
     timer();
-    setInterval(timer, 1000);
+    currentTimer = setInterval(timer, 1000);
 
+}
+
+var currentTimer = null;
+
+randommizeMinigame();
+function controller(){
+
+	player.totalPoints = player.SteppingonCrackPoint + player.OpeningUmbrellaPoint + player.KnockingWoodPoint + player.FanDeathPoint + player.CatCrossPoint;
+	player2.totalPoints = player2.SteppingonCrackPoint + player2.OpeningUmbrellaPoint + player2.KnockingWoodPoint+ player2.FanDeathPoint + player2.CatCrossPoint;
+
+
+if(player.totalPoints + player2.totalPoints >= WINCONDITION ){
+
+	if(player.totalPoints > player2.totalPoints){
+			currentState = states.End;
+			winningPlayer = player.name;
+	}else if(player2.totalPoints > player.totalPoints){
+			currentState = states.End;
+			winningPlayer = player2.name;
+	}
 
 }
 
 
 
-randommizeMinigame();
-function controller(){
-
-	player.totalPoints = player.SteppingonCrackPoint + player.OpeningUmbrellaPoint + player.KnockingWoodPoint + player.FanDeathPoint;
-	player2.totalPoints = player2.SteppingonCrackPoint + player2.OpeningUmbrellaPoint + player2.KnockingWoodPoint+ player2.FanDeathPoint;
-
-	if(player.totalPoints >= 10){
-			currentState = states.End;
-			winningPlayer = player.name;
-	}else if(player2.totalPoints >= 10){
-			currentState = states.End;
-			winningPlayer = player2.name;
-	}
      //Pause the game
     if (keydown.p) {
 
@@ -368,7 +386,7 @@ function update() { //Updates location and reaction of objects to the canvas
         if (keydown.space) {
 
             currentState = states.Game;
-						startTimer(10,miniGameTimer);
+					startTimer(10,miniGameTimer);
         }
 
 
@@ -403,7 +421,7 @@ function update() { //Updates location and reaction of objects to the canvas
 					console.log("good job you knocked on crack player 2");
 
         }
-
+				//open and close umbrella
 				if (keydown.e && randomMinigame == "umbrella") {
 					waitForInput(player, "umbrella");
 					console.log("good job you knocked on umbrella player 1");
@@ -415,7 +433,7 @@ function update() { //Updates location and reaction of objects to the canvas
 
 				}
 
-
+				//press button
 				if (keydown.r && randomMinigame == "fandeath") {
 					waitForInput(player, "fandeath");
 					console.log("good job you knocked on fandeath player 1");
@@ -424,6 +442,17 @@ function update() { //Updates location and reaction of objects to the canvas
 				if (keydown.f && randomMinigame == "fandeath") {
 						waitForInput(player2, "fandeath");
 					console.log("good job you knocked on fandeath player 2");
+
+				}
+				//step on both
+				if (keydown.t && keydown.y && randomMinigame == "catcross") {
+					waitForInput(player, "catcross");
+					console.log("good job you knocked on catcross player 1");
+				}
+
+				if (keydown.g && keydown.h && randomMinigame == "catcross") {
+						waitForInput(player2, "catcross");
+					console.log("good job you knocked on catcross player 2");
 
 				}
 
@@ -447,7 +476,38 @@ function update() { //Updates location and reaction of objects to the canvas
 
 
 }
+var cauldronSummonHeight = CANVAS_HEIGHT;
+var cauldronFontSize = 1;
 
+function printGameText(textToDisplay, color){
+
+	if(  (cauldronSummonHeight >= 2 ) && miniGameTimer >= 9){
+		cauldronSummonHeight = 1;
+		cauldronFontSize = 1;
+	}else{
+		cauldronSummonHeight = cauldronSummonHeight + .005;
+		cauldronFontSize = cauldronFontSize + 1;
+		if(cauldronSummonHeight >= 2){
+			cauldronSummonHeight = 2;
+
+		}
+		if(cauldronFontSize >= 80 ){
+			cauldronFontSize = 80;
+		}
+	}
+
+	canvas.fillStyle = "#000"; // Set color to black
+	canvas.font = 'bold ' + cauldronFontSize + 'pt WITCHESMAGIC';
+	var MINIGAME_TEXT = textToDisplay;
+	gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
+	canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / cauldronSummonHeight);
+	//The next two create a special text effect
+	canvas.fillStyle = color;
+	canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / cauldronSummonHeight);
+
+	canvas.fillStyle = "00F";
+	canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / cauldronSummonHeight);
+}
 function draw() { //Draws objects to the canvas
 
     canvas.clearRect(0, 0, CANVAS_WIDTH, CANVAS_HEIGHT);
@@ -459,7 +519,7 @@ function draw() { //Draws objects to the canvas
 
         canvas.fillStyle = "#000"; // Set color to black
         canvas.font = '25pt Calibri';
-        var SPLASH_SCREEN_TEXT = "Team Splash Screen";
+        var SPLASH_SCREEN_TEXT = "Team Freemium";
         splashTextX = canvas.measureText(SPLASH_SCREEN_TEXT).width;
         canvas.fillText(SPLASH_SCREEN_TEXT, (CANVAS_WIDTH / 2) - (splashTextX / 2), splashTextY);
 
@@ -469,7 +529,7 @@ function draw() { //Draws objects to the canvas
     if (currentState === states.title) {
 
         canvas.fillStyle = "#000"; // Set color to black
-        canvas.font = 'bold 40pt Calibri';
+        canvas.font = 'bold 40pt WITCHESMAGIC';
         var GAME_NAME_TEXT = "Superstitious";
         gameTextx = canvas.measureText(GAME_NAME_TEXT).width; //Centers the text based on length
         canvas.fillText(GAME_NAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 3);
@@ -482,7 +542,7 @@ function draw() { //Draws objects to the canvas
 
 
         canvas.fillStyle = "#F00";
-        canvas.font = 'bold 20pt Calibri';
+        canvas.font = 'bold 20pt WITCHESMAGIC';
         var SPACEBAR_TEXT = "Press Space to Continue";
         spaceBarTextx = canvas.measureText(SPACEBAR_TEXT).width; //Centers the text based on length
         canvas.fillText(SPACEBAR_TEXT, (CANVAS_WIDTH / 2) - (spaceBarTextx / 2), CANVAS_HEIGHT - CANVAS_HEIGHT / 4);
@@ -565,82 +625,45 @@ function draw() { //Draws objects to the canvas
 
 
 		if(randomMinigame == "wood"){
-
-			canvas.fillStyle = "#000"; // Set color to black
-			canvas.font = 'bold 80pt Calibri';
-			var MINIGAME_TEXT = "KNOCK ON WOOD!";
-			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 2);
-			//The next two create a special text effect
-			canvas.fillStyle = "#00F";
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 2);
-
-			canvas.fillStyle = "00F";
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 2);
-
+				printGameText("KNOCK ON WOOD!", "#00F");
 
 		}else if(randomMinigame == "crack"){
-
-			canvas.fillStyle = "#000"; // Set color to black
-			canvas.font = 'bold 80pt Calibri';
-			var MINIGAME_TEXT = "STEP ON THE CRACK!";
-			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 2);
-			//The next two create a special text effect
-			canvas.fillStyle = "#F00";
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 2);
-
-			canvas.fillStyle = "00F";
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 2);
-
+			printGameText("STEP ON THE CRACK!", "#F00");
 
 		}else if(randomMinigame == "umbrella"){
-
-			canvas.fillStyle = "#000"; // Set color to black
-			canvas.font = 'bold 80pt Calibri';
-			var MINIGAME_TEXT = "Don't open that umbrella!";
-			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 2);
-			//The next two create a special text effect
-			canvas.fillStyle = "#0F0";
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 2);
-
-			canvas.fillStyle = "00F";
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 2);
-
+			printGameText("Don't open that umbrella!", "#0F0");
 
 		}
 		else if(randomMinigame == "fandeath"){
+				printGameText("선풍기 괴담", "#0F0");
 
-			canvas.fillStyle = "#000"; // Set color to black
-			canvas.font = 'bold 80pt Calibri';
-			var MINIGAME_TEXT = "선풍기 괴담";
-			gameTextx = canvas.measureText(MINIGAME_TEXT).width; //Centers the text based on length
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) - 3, CANVAS_HEIGHT / 2);
-			//The next two create a special text effect
-			canvas.fillStyle = "#0F0";
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2), CANVAS_HEIGHT / 2);
+		}	else if(randomMinigame == "catcross"){
+					printGameText("Cross the Black Cat", "#000");
 
-			canvas.fillStyle = "10F";
-			canvas.fillText(MINIGAME_TEXT, (CANVAS_WIDTH / 2) - (gameTextx / 2) + 3, CANVAS_HEIGHT / 2);
-
-
-		}
+			}
 
 
 
         //Life Bar top is pink static background
-        canvas.strokeRect(20, 20, 100 * 2, 10);
+        canvas.strokeRect(CANVAS_WIDTH/2 - 150, 20,  WINCONDITION * WINCONDITION_MULTIPLYER, 40);
         canvas.fillStyle = "#8B8989";
-        canvas.fillRect(20, 20, 100 * 2, 10);
+        canvas.fillRect(CANVAS_WIDTH/2 - 150, 20,  WINCONDITION * WINCONDITION_MULTIPLYER, 40);
 
         //Second bar is red dynamic one
-        canvas.strokeRect(20, 20, 100 * 2, 10);
+        canvas.strokeRect(CANVAS_WIDTH/2 - 150, 20, 300 , 40);
+        canvas.fillStyle = "#cb21e6";
+        canvas.fillRect(CANVAS_WIDTH/2 - 150, 20, (player.totalPoints + player2.totalPoints) * WINCONDITION_MULTIPLYER, 40);
+
+
+				//Third bar is font between bars
+        canvas.strokeRect(CANVAS_WIDTH/2 - 150, 20, 300 , 40);
         canvas.fillStyle = "#F00";
-        canvas.fillRect(20, 20, player.life * 2, 10);
+        canvas.fillRect(CANVAS_WIDTH/2 - 150, 20, (player.totalPoints + player2.totalPoints) * WINCONDITION_MULTIPLYER, 40);
 
-
-
+				canvas.fillStyle = "#000"; // Set color to black
+				canvas.font = 'bold 20pt WITCHESMAGIC';
+				gameTextx = canvas.measureText("Curse Meter").width; //Centers the text based on length
+				canvas.fillText("Curse Meter", (CANVAS_WIDTH / 2) - 75  , 55);
 
     }
 
@@ -650,7 +673,7 @@ function draw() { //Draws objects to the canvas
 
 
         canvas.fillStyle = "#F00"; // Set color to red
-        canvas.font = '25pt Calibri';
+        canvas.font = '25pt WITCHESMAGIC';
 
         var GameOVER_TEXT = "You've succesfully Cursed the World " + winningPlayer + "!";
         endTextX = canvas.measureText(GameOVER_TEXT).width; //Centers the text based on length
@@ -659,17 +682,28 @@ function draw() { //Draws objects to the canvas
         canvas.fillText(GameOVER_TEXT, (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY - 90);
 
 
-        canvas.fillStyle = "#000"; // Set color to black
+        canvas.fillStyle = "#FFF"; // Set color to black
         canvas.font = '20pt Calibri';
-        endTextX = canvas.measureText("First Firstnameson").width;
-        canvas.fillText("First Firstnameson", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY - 45);
+        endTextX = canvas.measureText("Corey Jeffers").width;
+        canvas.fillText("Corey Jeffers", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY - 45);
 
 
-        canvas.fillStyle = "#000"; // Set color to black
+        canvas.fillStyle = "#FF"; // Set color to black
         canvas.font = '20pt Calibri';
-        canvas.fillText("Second Secondton", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY);
+        canvas.fillText("Blake Balick-Schreiber", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY);
 
 
+				canvas.fillStyle = "#FF"; // Set color to black
+				canvas.font = '20pt Calibri';
+				canvas.fillText("Wayne ", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 45);
+
+				canvas.fillStyle = "#FF"; // Set color to black
+				canvas.font = '20pt Calibri';
+				canvas.fillText("Jordan ", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 90);
+
+				canvas.fillStyle = "#FF"; // Set color to black
+				canvas.font = '20pt Calibri';
+				canvas.fillText("Okwudili Udeh ", (CANVAS_WIDTH / 2) - (endTextX / 2), endTextY + 135);
 
     }
 
